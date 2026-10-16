@@ -73,7 +73,7 @@ def _options(headless: bool, profil: Path = PROFIL, rapide: bool = False):
         from selenium.webdriver.edge.options import Options
     except ImportError as exc:  # pragma: no cover - depends on the installation
         raise ScanIndisponible(
-            "Selenium is not installed. Run: python -m pip install selenium"
+            "Selenium не установлен. Выполните: python -m pip install selenium"
         ) from exc
     o = Options()
     o.add_argument(f"--user-data-dir={profil}")
@@ -107,7 +107,7 @@ def _ouvrir(headless: bool, profil: Path = PROFIL, rapide: bool = False):
     try:
         return webdriver.Edge(options=_options(headless, profil, rapide))
     except Exception as exc:
-        raise ScanIndisponible(f"Cannot start Edge: {exc}") from exc
+        raise ScanIndisponible(f"Не удалось запустить Microsoft Edge: {exc}") from exc
 
 
 def est_connecte(driver) -> bool:

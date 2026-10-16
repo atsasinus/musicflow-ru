@@ -3,6 +3,7 @@
 .venv/
 venv/
 env/
+.kotlin/
 node_modules/
 __pycache__/
 *.pyc
@@ -13,7 +14,8 @@ build/
 *.idsig
 *.log
 .env
-.env.local
+.env.*
+!.env.example
 nawara-server/.env
 secret.key
 *.key
@@ -35,5 +37,9 @@ build_exe.log
 
 *.jks
 *.keystore
+*.p12
+*.pfx
 keystore.properties
+signing.properties
+local.properties
 identites.json

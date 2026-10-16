@@ -51,7 +51,7 @@ def top_pays(pays: str = "fr", limite: int = 100):
         except Exception as exc:
             derniere = exc
     if res is None:
-        raise RuntimeError(f"chart unavailable for now ({derniere})")
+        raise RuntimeError(f"Чарт Apple Music временно недоступен: {derniere}")
     out = []
     for x in res:
         img = (x.get("artworkUrl100") or "")

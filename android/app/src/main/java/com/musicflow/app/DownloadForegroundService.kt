@@ -35,7 +35,7 @@ class DownloadForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         createChannel()
-        startForeground(NOTIF_ID, buildNotification("Downloading…", -1))
+        startForeground(NOTIF_ID, buildNotification(getString(R.string.notification_starting), -1))
         try {
             wakeLock = (getSystemService(POWER_SERVICE) as PowerManager)
                 .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MusicFlow:telechargement").apply {
@@ -79,14 +79,14 @@ class DownloadForegroundService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, flags)
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("MusicFlow")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText(text)
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setContentIntent(pendingIntent)
-            .addAction(0, "View download", pendingIntent)
+            .addAction(0, getString(R.string.notification_view_download), pendingIntent)
 
         if (percent in 0..100) builder.setProgress(100, percent, false)
         return builder.build()
@@ -95,7 +95,7 @@ class DownloadForegroundService : Service() {
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                CHANNEL_ID, "MusicFlow downloads", NotificationManager.IMPORTANCE_LOW
+                CHANNEL_ID, getString(R.string.notification_channel_downloads), NotificationManager.IMPORTANCE_LOW
             )
             getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }

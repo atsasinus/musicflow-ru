@@ -73,4 +73,4 @@ def refuser_extrait(chemin, duree_attendue) -> None:
             Path(chemin).unlink(missing_ok=True)
         except Exception:
             pass
-        raise RuntimeError(f"only an excerpt was available ({int(reelle)} s instead of {attendue} s)")
+        raise RuntimeError(f"Доступен только фрагмент записи ({int(reelle)} с вместо {attendue} с).")

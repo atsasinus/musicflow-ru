@@ -4,3 +4,4 @@ yt-dlp-ejs
 imageio-ffmpeg
 mutagen
 selenium
+truststore
