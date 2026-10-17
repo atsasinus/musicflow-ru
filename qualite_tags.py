@@ -62,9 +62,9 @@ def ecrire_base(chemin, titre: str, artiste: str) -> str:
                 f["ALBUMARTIST"] = [artiste]
             f.save()
         else:
-            return f"unsupported format: {ext}"
+            return f"Неподдерживаемый формат: {ext}"
     except Exception as exc:
-        return f"writing metadata: {exc}"
+        return f"Не удалось записать метаданные: {exc}"
     return ""
 
 
@@ -113,9 +113,9 @@ def pochette(chemin, data: bytes, mime: str = "image/jpeg") -> str:
                 t.add(APIC(encoding=3, mime=mime, type=3, desc="Cover", data=data))
                 t.save(str(chemin))
         else:
-            return f"unsupported format: {ext}"
+            return f"Неподдерживаемый формат: {ext}"
     except Exception as exc:
-        return f"cover art: {exc}"
+        return f"Не удалось добавить обложку: {exc}"
     return ""
 
 
@@ -125,12 +125,12 @@ def saturation(sortie_ffmpeg: str) -> str:
     m_0db = re.search(r"histogram_0db:\s*(\d+)", sortie_ffmpeg or "")
     m_moy = re.search(r"mean_volume:\s*(-?[\d.]+)\s*dB", sortie_ffmpeg or "")
     if m_moy and float(m_moy.group(1)) < -40:
-        return "son presque inaudible"
+        return "звук почти не слышен"
     m_n = re.search(r"n_samples:\s*(\d+)", sortie_ffmpeg or "")
     if m_max and float(m_max.group(1)) >= 0 and m_0db and m_n and int(m_n.group(1)):
         # Modern masters often hit 0 dB: only heavy clipping is reported.
         if int(m_0db.group(1)) / int(m_n.group(1)) > 0.01:
-            return "clipped audio"
+            return "звук перегружен (клиппинг)"
     return ""
 
 
@@ -234,7 +234,7 @@ def ecrire(chemin, champs: dict) -> str:
                     del f[nom]
             f.save()
         else:
-            return f"unsupported format: {ext}"
+            return f"Неподдерживаемый формат: {ext}"
     except Exception as exc:
-        return f"writing: {exc}"
+        return f"Не удалось записать теги: {exc}"
     return ""

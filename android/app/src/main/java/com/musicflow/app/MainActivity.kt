@@ -315,7 +315,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 try {
                     val i = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text)
-                    startActivity(Intent.createChooser(i, "Partager").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                    startActivity(Intent.createChooser(i, getString(R.string.share_title)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
                 } catch (e: Exception) { }
             }
         }
@@ -325,7 +325,7 @@ class MainActivity : AppCompatActivity() {
         fun startVoiceSearch(): Boolean {
             val intent = Intent(android.speech.RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
                 .putExtra(android.speech.RecognizerIntent.EXTRA_LANGUAGE_MODEL, android.speech.RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, "Say the title or the artist")
+                .putExtra(android.speech.RecognizerIntent.EXTRA_PROMPT, getString(R.string.voice_search_prompt))
             if (intent.resolveActivity(packageManager) == null) return false
             runOnUiThread {
                 try { voixLauncher.launch(intent) } catch (e: Exception) {

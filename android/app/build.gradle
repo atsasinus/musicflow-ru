@@ -2,16 +2,22 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'com.chaquo.python'
 
-// Release signing key: kept OUTSIDE the repository (PROJETS\.cles), never committed
+// Local release signing credentials stay outside the repository.
+def signingPropertiesPath = project.findProperty("musicflowSigningProperties") ?: System.getenv("MUSICFLOW_SIGNING_PROPERTIES")
+def fichierCle = signingPropertiesPath ? file(signingPropertiesPath) : rootProject.file("signing.properties")
 def proprietesCle = new Properties()
-def fichierCle = file("C:/Users/skander/PROJETS/.cles/keystore.properties")
 if (fichierCle.exists()) { fichierCle.withInputStream { proprietesCle.load(it) } }
+def chaquopyBuildPython = project.findProperty("chaquopyPython") ?: System.getenv("CHAQUOPY_PYTHON")
 
 android {
     signingConfigs {
         release {
             if (fichierCle.exists()) {
-                storeFile file(proprietesCle["storeFile"])
+                def keystorePath = proprietesCle.getProperty("storeFile")
+                if (keystorePath) {
+                    def keystoreFile = new File(keystorePath)
+                    storeFile(keystoreFile.isAbsolute() ? keystoreFile : new File(fichierCle.parentFile, keystorePath))
+                }
                 storePassword proprietesCle["storePassword"]
                 keyAlias proprietesCle["keyAlias"]
                 keyPassword proprietesCle["keyPassword"]
@@ -38,7 +44,9 @@ android {
 
         python {
             version "3.13"
-            buildPython "C:/dev/py313pkg/tools/python.exe"
+            if (chaquopyBuildPython) {
+                buildPython chaquopyBuildPython
+            }
             pip {
                 install "yt-dlp"
                 install "flask"

@@ -91,9 +91,9 @@ def integrer(chemin, paroles: dict, lrc: bool = True) -> str:
             f["LYRICS"] = [texte]
             f.save()
         else:
-            return f"unsupported format: {ext}"
+            return f"Неподдерживаемый формат: {ext}"
     except Exception as exc:
-        return f"writing lyrics: {exc}"
+        return f"Не удалось записать текст песни: {exc}"
     if lrc and paroles.get("synced"):
         try:
             chemin.with_suffix(".lrc").write_text(paroles["synced"], encoding="utf-8")

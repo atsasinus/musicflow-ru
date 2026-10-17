@@ -92,7 +92,7 @@ def verifier_duree(chemin, attendue) -> str:
     if abs(ecart) <= ECART_MAX_S:
         return ""
     fmt = lambda s: f"{int(s) // 60}:{int(s) % 60:02d}"
-    return f"{fmt(reelle)} instead of {fmt(attendue_s)}"
+    return f"{fmt(reelle)} вместо {fmt(attendue_s)}"
 
 
 def _normaliser(texte: str) -> str:

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MusicFlow</string>
+    <string name="app_name">MusicFlow-RU</string>
+    <string name="app_starting">Запуск MusicFlow-RU…</string>
+    <string name="share_title">Поделиться</string>
+    <string name="voice_search_prompt">Назовите песню или исполнителя</string>
+    <string name="notification_starting">Загрузка…</string>
+    <string name="notification_view_download">Открыть загрузку</string>
+    <string name="notification_channel_downloads">Загрузки MusicFlow-RU</string>
 </resources>

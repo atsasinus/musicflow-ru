@@ -221,7 +221,7 @@ def integrer(chemin, infos: dict) -> str:
                     f[f"----:com.apple.iTunes:{cle}"] = [MP4FreeForm(str(val).encode("utf-8"))]
             f.save()
         else:
-            return f"unsupported format: {ext}"
+            return f"Неподдерживаемый формат: {ext}"
     except Exception as exc:
-        return f"writing album info: {exc}"
+        return f"Не удалось записать сведения об альбоме: {exc}"
     return ""

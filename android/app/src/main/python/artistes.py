@@ -27,8 +27,9 @@ def _get(chemin: str):
         if (err or {}).get("code") == 4:      # Deezer quota (~50 requests / 5 s): wait
             time.sleep(1.5 + essai)
             continue
-        raise RuntimeError((err or {}).get("message") or "Deezer error")
-    raise RuntimeError("Deezer is overloaded, try again in a moment.")
+        detail = (err or {}).get("message")
+        raise RuntimeError(f"Ошибка Deezer: {detail}" if detail else "Ошибка Deezer.")
+    raise RuntimeError("Сервис Deezer перегружен. Повторите попытку позже.")
 
 
 def _tout(chemin: str, maxi: int = 1000):

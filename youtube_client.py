@@ -32,7 +32,7 @@ def _request(method, url, headers=None, data=None, params=None):
             return json.loads(raw) if raw else {}
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"YouTube API {e.code}: {detail}") from e
+        raise RuntimeError(f"Ошибка API YouTube ({e.code}): {detail}") from e
 
 
 def build_authorize_url(state: str) -> str:
@@ -79,14 +79,14 @@ def exchange_code(code: str):
         params={"part": "snippet", "mine": "true"},
     )
     items = me.get("items") or []
-    name = items[0]["snippet"]["title"] if items else "YouTube account"
+    name = items[0]["snippet"]["title"] if items else "Аккаунт YouTube"
     store.set_provider_fields("youtube", user={"name": name})
 
 
 def _refresh_if_needed():
     creds = store.get_provider("youtube")
     if not creds.get("refresh_token"):
-        raise RuntimeError("Not connected to YouTube.")
+        raise RuntimeError("Аккаунт YouTube не подключён.")
     if creds.get("access_token") and time.time() < float(creds.get("expires_at") or 0):
         return creds["access_token"]
 
@@ -114,7 +114,7 @@ def _auth_headers():
     return {"Authorization": f"Bearer {_refresh_if_needed()}"}
 
 
-def create_playlist(title: str, description: str = "Created with MusicFlow") -> dict:
+def create_playlist(title: str, description: str = "Создано в MusicFlow-RU") -> dict:
     return _request(
         "POST",
         f"{API_BASE}/playlists",

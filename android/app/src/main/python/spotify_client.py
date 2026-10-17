@@ -36,7 +36,7 @@ def _request(method, url, headers=None, data=None, params=None):
             return json.loads(raw) if raw else {}
     except urllib.error.HTTPError as e:
         detail = e.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Spotify API {e.code}: {detail}") from e
+        raise RuntimeError(f"Ошибка API Spotify ({e.code}): {detail}") from e
 
 
 def build_authorize_url(state: str) -> str:
@@ -85,7 +85,7 @@ def exchange_code(code: str):
 def _refresh_if_needed():
     creds = store.get_provider("spotify")
     if not creds.get("refresh_token"):
-        raise RuntimeError("Not connected to Spotify.")
+        raise RuntimeError("Аккаунт Spotify не подключён.")
     if creds.get("access_token") and time.time() < float(creds.get("expires_at") or 0):
         return creds["access_token"]
 
@@ -230,11 +230,11 @@ def search_track(title: str, artist: str = "") -> dict | None:
     }
 
 
-def create_playlist(name: str, description: str = "Created with MusicFlow") -> dict:
+def create_playlist(name: str, description: str = "Создано в MusicFlow-RU") -> dict:
     creds = store.get_provider("spotify")
     user_id = (creds.get("user") or {}).get("id")
     if not user_id:
-        raise RuntimeError("Spotify account not connected.")
+        raise RuntimeError("Аккаунт Spotify не подключён.")
     return _request(
         "POST",
         f"{API_BASE}/users/{user_id}/playlists",

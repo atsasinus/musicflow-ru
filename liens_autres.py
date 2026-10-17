@@ -57,16 +57,16 @@ def deezer(url: str):
         url = _url_finale(url)
     m = re.search(r"/(track|album|playlist)/(\d+)", url)
     if not m:
-        raise ValueError("Unrecognized Deezer link (expected a track, album or playlist).")
+        raise ValueError("Неизвестная ссылка Deezer. Нужна ссылка на трек, альбом или плейлист.")
     genre, ident = m.groups()
     if genre == "track":
         t = _get_json(f"https://api.deezer.com/track/{ident}")
         if t.get("error"):
-            raise ValueError("Deezer track not found.")
+            raise ValueError("Трек Deezer не найден.")
         return [_deezer_piste(t)], None
     meta = _get_json(f"https://api.deezer.com/{genre}/{ident}")
     if meta.get("error"):
-        raise ValueError("Deezer album or playlist not found (private?).")
+        raise ValueError("Альбом или плейлист Deezer не найден или закрыт.")
     pistes, suivant = [], f"https://api.deezer.com/{genre}/{ident}/tracks?limit=500"
     while suivant and len(pistes) < 5000:
         page = _get_json(suivant)
@@ -75,7 +75,7 @@ def deezer(url: str):
     album = meta if genre == "album" else None
     items = [_deezer_piste(t, album) for t in pistes if t.get("title")]
     if not items:
-        raise ValueError("No tracks found in this Deezer link.")
+        raise ValueError("По этой ссылке Deezer не найдены песни.")
     return items, meta.get("title") or "Deezer"
 
 
@@ -95,27 +95,27 @@ def apple(url: str):
     pays = (p.path.strip("/").split("/") or ["fr"])[0][:2] or "fr"
     qs = urllib.parse.parse_qs(p.query)
     if "/playlist/" in p.path:
-        raise ValueError("Apple Music playlists can't be read without an account: "
-                         "use an album or track link, or the same playlist on Spotify/Deezer.")
+        raise ValueError("Плейлисты Apple Music нельзя прочитать без аккаунта разработчика. "
+                         "Используйте ссылку на альбом или трек либо аналогичный плейлист Spotify или Deezer.")
     if qs.get("i"):                              # track inside an album
         res = _get_json(f"https://itunes.apple.com/lookup?id={qs['i'][0]}&country={pays}").get("results") or []
         if not res:
-            raise ValueError("Apple Music track not found.")
+            raise ValueError("Трек Apple Music не найден.")
         return [_apple_piste(res[0])], None
     m = re.search(r"/(album|song)/[^/]*/?(\d+)", p.path) or re.search(r"/(album|song)/(\d+)", p.path)
     if not m:
-        raise ValueError("Unrecognized Apple Music link (expected an album or track).")
+        raise ValueError("Неизвестная ссылка Apple Music. Нужна ссылка на альбом или трек.")
     genre, ident = m.groups()
     res = _get_json(f"https://itunes.apple.com/lookup?id={ident}&entity=song&limit=200&country={pays}").get("results") or []
     if genre == "song":
         chansons = [r for r in res if r.get("wrapperType") == "track"]
         if not chansons:
-            raise ValueError("Apple Music track not found.")
+            raise ValueError("Трек Apple Music не найден.")
         return [_apple_piste(chansons[0])], None
     nom = next((r.get("collectionName") for r in res if r.get("wrapperType") == "collection"), "Apple Music")
     items = [_apple_piste(r) for r in res if r.get("wrapperType") == "track"]
     if not items:
-        raise ValueError("No tracks found in this Apple Music album.")
+        raise ValueError("В этом альбоме Apple Music не найдены песни.")
     return items, nom
 
 
